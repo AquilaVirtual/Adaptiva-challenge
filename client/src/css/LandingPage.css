@@ -1,3 +1,15 @@
 .landing-container {
-  background: color;
+  max-width: 1000px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 5px;
+}
+.landing-container .cards {
+  margin: 5px;
+  position: relative;
+}
+.landing-container :hover {
+  cursor: pointer;
 }

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import Pagination from "react-paginating";
 import axios from 'axios';
 
 import Modal from './Modal';
+import Paginator from './Paginator';
 
 import '../css/LandingPage.css';
-
+//ClientId is left public intentionally
 const clientId = 'bfe7bd0e821b04117b1092ac6b6aca9f522330b06f367bebe2aa9b2b1514480d';
 const endpoint = 'https://api.unsplash.com/users/AlejandroEscamilla/photos/?client_id=';
 
@@ -16,12 +18,16 @@ class LandingPage extends Component {
             photos: [],
             isModalOpen: false,
             index: 0,
+            currentPhoto: 1,
          } 
     }   
 
-    enlarge = () => {
-
-    }   
+    handlePageChange = page => {
+        this.setState({
+          currentPhoto: page
+        });
+      };
+         
      componentDidMount = () => {
          axios.get('https://picsum.photos/list')
          .then(response => {
@@ -48,29 +54,23 @@ class LandingPage extends Component {
              console.log(err)
          })
      } 
-
      openModal() {
         this.setState({ isModalOpen: true })
-      }
-    
+    }    
       closeModal() {
         this.setState({ isModalOpen: false })
       }
     
     render() {
         return (
-            <div className="landing-container">
-             
-            {this.state.photos.map((element, i) => {
+            <div className="landing-container">                    
+            {this.state.photos.map((element, i) => {                
             return (
-                <div key={i}>         
-          {}
-          <Modal 
-      
+           <div key={i}>          
+          <Modal       
            noBackdrop={true} 
            isOpen={this.state.isModalOpen} 
-           onClose={() => this.closeModal()}
-          >
+           onClose={() => this.closeModal()}          >
           <img alt="" src={`${element.urls.full}`} height="700" width="1000" />
           </Modal>
           <div className="cards"key={i} onClick={() => this.openModal()}>{<img alt="" src={element.urls.full} height="250" width="300"/>}</div>

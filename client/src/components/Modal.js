@@ -64,7 +64,7 @@ class Modal extends Component {
         modalStyle.height = this.props.height + 'px'
         // modalStyle.marginLeft = '-' + (this.props.width/2) + 'px',
         // modalStyle.marginTop = '-' + (this.props.height/2) + 'px',
-        // modalStyle.transform = null
+        //  modalStyle.transform = null
       }
   
       if (this.props.style) {

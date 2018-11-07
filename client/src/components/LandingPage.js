@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import Pagination from "react-paginating";
+import { GridList, GridTile } from 'material-ui/GridList';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import Modal from './Modal';
-import Paginator from './Paginator';
+
 
 import '../css/LandingPage.css';
 //ClientId is left public intentionally
@@ -19,27 +19,29 @@ class LandingPage extends Component {
             isModalOpen: false,
             index: 0,
             currentPhoto: 1,
+            src: '',
+            currentImg: '',
+
          } 
     }   
 
     handlePageChange = page => {
         this.setState({
-          currentPhoto: page
+            currentPhoto: page
         });
-      };
+    };
          
      componentDidMount = () => {
          axios.get('https://picsum.photos/list')
          .then(response => {
-             var data = [];
-             var photos = [];
+             var data = [];          
              data = response.data.filter((element) => {
             return element.author === 'Alejandro Escamilla';
               })        
         console.log("State here", data);
         axios.get(`${endpoint}${clientId}`)
             .then(response => {
-                console.log("Dumb", response)
+                console.log("Dumbi", response)
                 this.setState({
                     photos: response.data
                 })           
@@ -52,34 +54,55 @@ class LandingPage extends Component {
          })
          .catch(err => {
              console.log(err)
-         })
-     } 
-     openModal() {
-        this.setState({ isModalOpen: true })
-    }    
+         })        
+     }     
+    
+    handleOpen = img => {
+        this.setState({ isModalOpen: true, currentImg: img });
+        console.log("Hi")
+      };
+
       closeModal() {
         this.setState({ isModalOpen: false })
       }
-    
+
     render() {
-        return (
-            <div className="landing-container">                    
-            {this.state.photos.map((element, i) => {                
-            return (
-           <div key={i}>          
-          <Modal       
-           noBackdrop={true} 
-           isOpen={this.state.isModalOpen} 
-           onClose={() => this.closeModal()}          >
-          <img alt="" src={`${element.urls.full}`} height="700" width="1000" />
-          </Modal>
-          <div className="cards"key={i} onClick={() => this.openModal()}>{<img alt="" src={element.urls.full} height="250" width="300"/>}</div>
-          </div>
-            )
-            })}           
-      
-        </div>)
+        let imageListContent;
+        const { photos } = this.state;
+        if(photos) {
+            imageListContent = (
+                <GridList cols={3}> 
+                {photos.map((img,i) => (               
+                  
+           <GridTile  key={i}
+           onClick={() => this.handleOpen(img.urls.full)}
+            > 
+            <img src={img.urls.full} alt="" /> 
+          </GridTile>              
+                      
+            ))}          
+       </GridList>
+        );
+       } else {
+        imageListContent = null;
+      }      
+    
+    return (
+        <div className="landing-container">  
+    {imageListContent}   
+   
+    <Modal           
+         noBackdrop={true} 
+        isOpen={this.state.isModalOpen} 
+        onClose={() => this.closeModal()}          >
+        <img alt="" src={this.state.currentImg} height="700" width="1000" />
+        </Modal>
+    </div>
+        );
     }    
 }
 
-export default withRouter(LandingPage);
+LandingPage.propTypes = {
+    images: PropTypes.array.isRequired
+  };
+export default LandingPage;

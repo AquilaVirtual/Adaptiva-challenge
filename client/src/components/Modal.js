@@ -41,30 +41,30 @@ class Modal extends Component {
       
       let modalBodyStyle = {
         paddingTop: 43,
-        paddingLeft: 10,
-        paddingRight: 10,
+        paddingLeft: 40,
+        paddingRight: 40,
         paddingBottom: 20,
         background: '#242424',
         height: '80%',
         color: 'white'
       }
       
-      let closeButtonStyle = {
-          color: '#777',
-          font: '14px/100% arial, sans-serif',
-          position: 'absolute',
-          right: '5px',
-          textDecoration: 'none',
-          textShadow: '0 1px 0 #fff',
-          top: 5
-      }
+    //   let closeButtonStyle = {
+    //       color: '#777',
+    //       font: '14px/100% arial, sans-serif',
+    //       position: 'absolute',
+    //       right: '5px',
+    //       textDecoration: 'none',
+    //       textShadow: '0 1px 0 #fff',
+    //       top: 5
+    //   }
   
       if (this.props.width && this.props.height) {
         modalStyle.width = this.props.width + 'px'
         modalStyle.height = this.props.height + 'px'
         // modalStyle.marginLeft = '-' + (this.props.width/2) + 'px',
         // modalStyle.marginTop = '-' + (this.props.height/2) + 'px',
-        //  modalStyle.transform = null
+         modalStyle.transform = null
       }
   
       if (this.props.style) {
@@ -90,7 +90,8 @@ class Modal extends Component {
       }
   
       return (
-        <div className={this.props.containerClassName}>
+        
+        <div className={this.props.containerClassName}>        
           <div className={this.props.className} style={modalStyle}>
             <div className={"modalHeader"} style={modalHeaderStyle}>
               <a onClick={e => this.close(e)} href="#" className={"close-thin"}></a>

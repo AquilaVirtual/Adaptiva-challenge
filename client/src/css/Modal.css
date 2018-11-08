@@ -1,11 +1,21 @@
 /* Close Button */
+.left-button {
+  height: 703px;
+  font-size: 2em;
+  position: absolute;
+  align-items: center;
+}
+.mother {
+  margin-left: 399px;
+}
 [class*='close-'] {
   color: white;
   font: 28px/100% arial, sans-serif;
   position: absolute;
-  right: 10px;
+  right: 40px;
   text-decoration: none;
-  top: 10px;
+  top: 20px;
+  font-size: 46px;
 }
 [class*='close-']:hover {
   color: gray;

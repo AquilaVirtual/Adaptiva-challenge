@@ -1,8 +1,79 @@
 import React, { Component } from 'react';
+import Swipeable from 'react-swipeable';
 import '../css/Modal.css';
 
+const IMG_1 = `https://unsplash.it/342/249`;
+const IMG_2 = `https://unsplash.it/342/250`;
+const IMG_3 = `https://unsplash.it/342/251`;
+const IMG_4 = `https://unsplash.it/342/252`;
+const IMG_5 = `https://unsplash.it/342/253`;
+const IMAGES = [IMG_1, IMG_2, IMG_3, IMG_4, IMG_5];
+
+const IMG_WIDTH = "342px";
+const IMG_HEIGHT = "703px";
+
+
+const RIGHT = '-1';
+const LEFT = '+1';
+
+const buttonStylesLeft = {
+  height: IMG_HEIGHT,
+  fontSize: "2.3em",
+  position: "absolute",
+  background: "transparent",
+  border: "none",
+  color: "white"
+ 
+};
+const buttonStylesRight = {
+    marginleft: "105px",
+    float: "right",
+    fontSize: "2.3em",
+    border: "none",
+    height: IMG_HEIGHT,
+    background: "transparent",
+    color: "white"     
+   };
+
 class Modal extends Component {
+    constructor(props, context) {
+        super(props, context);
+        this.state = { 
+            imageIdx: 0,
+            photos: [],
+        };
+      }
+       componentDidMount = () => {
+          console.log("Trying to set state")
+          this.setState({
+              photos: this.props.photos
+          })
+       }
+
+    onSwiped(direction) {    
+        const change = direction === RIGHT ? RIGHT : LEFT;
+        console.log("which", change);
+        const adjustedIdx = this.state.imageIdx + Number(change);
+        let newIdx;
+        if (adjustedIdx >= this.props.photos.length) {
+          newIdx = 0;
+        } else if (adjustedIdx < 0) {
+          newIdx = this.props.photos.length - 1
+        } else {
+          newIdx = adjustedIdx;
+        }
+        this.setState({ imageIdx: newIdx });
+        let im = this.props.photos[0].urls.small;
+         console.log("All of them", this.props.photos)
+      }
+
     render() {
+        const { imageIdx = 0 } = this.state;
+        const imageStyles = {
+          width: IMG_WIDTH,
+          height: IMG_HEIGHT, 
+          backgroundImage: `url(${IMAGES[imageIdx]})`
+        };
       if (this.props.isOpen === false)
         return null
   
@@ -11,7 +82,7 @@ class Modal extends Component {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        zIndex: '9999',
+        zIndex: '9999%',
         background: '#fff',
         border: '1px solid gray',
         boxShadow: '4px 4px 25px 1px #888888',
@@ -21,49 +92,32 @@ class Modal extends Component {
       let modalHeaderStyle = {
         width: '100%',
         height: 40,
-        background: '#333333',
-        position: 'absolute',
-        borderBottom: '1px solid black',
+      
+        position: 'absolute',      
         top: 0,
         cursor: 'move',
-        color: 'white'
+        color: 'white',
+        marginright: 40,       
+       
       }
       
       let modalFooterStyle = {
         width: '100%',
-        height: 40,
-        borderTop: '1px solid black',
-        background: '#333',
+        height: 40,        
         position: 'absolute',
         bottom: 0,
         textAlign: 'right'
       }
       
-      let modalBodyStyle = {
-        paddingTop: 43,
-        paddingLeft: 40,
-        paddingRight: 40,
-        paddingBottom: 20,
+      let modalBodyStyle = {   
         background: '#242424',
         height: '80%',
         color: 'white'
-      }
-      
-    //   let closeButtonStyle = {
-    //       color: '#777',
-    //       font: '14px/100% arial, sans-serif',
-    //       position: 'absolute',
-    //       right: '5px',
-    //       textDecoration: 'none',
-    //       textShadow: '0 1px 0 #fff',
-    //       top: 5
-    //   }
-  
+      }      
+
       if (this.props.width && this.props.height) {
         modalStyle.width = this.props.width + 'px'
-        modalStyle.height = this.props.height + 'px'
-        // modalStyle.marginLeft = '-' + (this.props.width/2) + 'px',
-        // modalStyle.marginTop = '-' + (this.props.height/2) + 'px',
+        modalStyle.height = this.props.height + 'px'    
          modalStyle.transform = null
       }
   
@@ -80,7 +134,7 @@ class Modal extends Component {
         top: '0px',
         left: '0px',
         zIndex: '9998',
-        background: 'rgba(0, 0, 0, 0.3)'
+        background: 'rgba(0, 0, 0, 0.1)'
       }
   
       if (this.props.backdropStyle) {
@@ -89,30 +143,58 @@ class Modal extends Component {
         }
       }
   
-      return (
+      return ( 
+          <div className="mother">        
+        <Swipeable 
+          className="swipe"
+          trackMouse
+          style={{ touchAction: 'none' }}
+          preventDefaultTouchmoveEvent
+          onSwipedLeft={()=>this.onSwiped(LEFT)}
+          onSwipedRight={()=>this.onSwiped(RIGHT)}
+        >
+          <div style={imageStyles} >           
+          </div>
+        </Swipeable>  
         
+
+
         <div className={this.props.containerClassName}>        
           <div className={this.props.className} style={modalStyle}>
+          {/* Left button here */}
+          <button
+              onClick={()=>this.onSwiped(LEFT)}     
+              style={buttonStylesLeft} >⇦</button>          
             <div className={"modalHeader"} style={modalHeaderStyle}>
-              <a onClick={e => this.close(e)} href="#" className={"close-thin"}></a>
+              <div onClick={e => this.close(e)}  className={"close-thin"}></div>              
+            </div>
+            <div className={"modalHeader"} style={modalHeaderStyle}>
+            {/* Right button here */}
+            <button
+              onClick={()=>this.onSwiped(RIGHT)}     
+              style={buttonStylesRight}>⇨</button> 
             </div>
             <div className={"modalBody"} style={modalBodyStyle}>
             {this.props.children}
+            </div>           
+            <div  style={modalFooterStyle}>
+               <div onClick={(e) => this.close(e)} ></div>        
             </div>
+            
             <div className={"modalFooter"} style={modalFooterStyle}>
-               <a onClick={(e) => this.close(e)} className='mm-close'>Close</a>
+               <div onClick={(e) => this.close(e)} className='mm-close'>Close</div>
             </div>
           </div>
           {!this.props.noBackdrop &&
               <div className={this.props.backdropClassName} style={backdropStyle}
-                   onClick={e => this.close(e)}/>}
-        </div>
+                onClick={e => this.close(e)}/>}                   
+        </div>        
+        </div>        
       )
     }
   
     close(e) {
-      e.preventDefault()
-  
+      e.preventDefault();  
       if (this.props.onClose) {
         this.props.onClose()
       }

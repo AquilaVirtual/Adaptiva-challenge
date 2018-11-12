@@ -69,10 +69,8 @@ body {
   right: 0;
   display: block;
 }
-.gallery-container .gallery-grid div:hover:before,
-.gallery-container .gallery-grid div:hover:after {
-  opacity: 1;
-  transition: .3s opacity ease;
+.gallery-container .gallery-grid div:hover {
+  background: gray;
 }
 .gallery-container .modal {
   position: fixed;

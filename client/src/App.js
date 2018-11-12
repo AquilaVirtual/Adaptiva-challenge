@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import Modal from './components/Modal';
 import axios from 'axios';
 import './css/App.css'
 //ClientId is left public intentionally
@@ -80,10 +81,19 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="gallery-container">     
+      <div className="gallery-container"> 
+      <div className="gallery-header">Adaptiva Challenge</div>    
         <div className="gallery-grid">
           {this.state.imgUrls.map(this.renderImageContent)}
-        </div>        
+        </div>
+        <Modal 
+          closeModal={this.closeModal} 
+          findPrev={this.findPrev} 
+          findNext={this.findNext} 
+          hasPrev={this.state.currentIndex > 0} 
+          hasNext={this.state.currentIndex + 1 < this.state.imgUrls.length} 
+          src={this.state.imgUrls[this.state.currentIndex]} 
+        />
       </div>
     )
   }
